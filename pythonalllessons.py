@@ -101,7 +101,7 @@ names = ['jacques', 'Ty', 'Mia', 'pui-wa']
 print("Longest name is:", max(names, key=lambda name: len(name))) #print Longest name is: jacques
 print("Names sorted case insensitive:", sorted(names, key=lambda name: name.lower())) #print Names sorted case insensitive: ['jacques', 'Mia', 'pui-wa', 'Ty']
 
-#4 Exercise: Functions and Getting Help
+#4. Exercise: Functions and Getting Help
 def roundtwodecimalplaces(num):
 	return round(num,2)
 print(roundtwodecimalplaces(104.5689)) #print 104.57
@@ -117,4 +117,145 @@ def smashcandies(totalcandies, numberoffriends=3):
 	return totalcandies % numberoffriends
 print(smashcandies((121+77+109),3)) #print 1
 print(smashcandies((121+77+109),5)) #print 2
-#continue #5
+
+#5. Booleans and Conditionals
+def canrunforpresident(age):
+	return age >=35
+print("Can a 19 year old run fore President?",canrunforpresident(19)) #print Can a 19 year old run fore President? False
+print("Can a 45 year old run fore President?",canrunforpresident(45)) #print Can a 45 year old run fore President? True
+print(3.0==3) #print True
+def isodd(n):
+	return (n % 2) == 1
+print(isodd(100)) #print False
+print(isodd(5)) #print True
+def canrunforpresident2(age, citizen):
+	return age >=35 and citizen=="yes"
+print(canrunforpresident2(19,"yes")) #print False
+print(canrunforpresident2(50,"no")) #print False
+print(canrunforpresident2(65,"yes")) #print True
+def canrunforpresident3(age, citizen):
+	return age >=35 and citizen
+print(canrunforpresident3(65,True)) #print True
+print(canrunforpresident3(19,True)) #print False
+print(canrunforpresident3(50,False)) #print False
+#and has a higher precedence than or; e.g True or True and False.  Answer is True.
+def conditionals(x):
+	if x == 0:
+		print(x,"is zero")
+	elif x > 0:
+		print(x,"is positive")
+	elif x < 0:
+		print(x,"is negative")
+	else:
+		print(x,"is something else")
+conditionals(0) #return 0 is zero
+conditionals(-15) #return -15 is negative
+conditionals(2303) #return 2303 is positive
+#Boolean conversion
+print(1) #print 1
+print(bool(1)) #print True
+print(bool(0)) #print False
+print(bool("all strings are treated as true except the empty string \"\"")) #print True
+print(bool("")) #print False
+#We can use non-boolean objects in if conditions and other places where a boolean would be expected. Python will implicitly treat them as their corresponding boolean value.
+if 0:
+	print(0)
+elif "spam":
+	print("spam") #print spam
+if 0:
+	print(0)
+if bool(0)==False:
+	print(0) #print 0
+if 1:
+	print("1 love") #print 1 love
+if "text":
+	print("True text") #print True text
+
+#6. Exercise: Functions and Getting Help
+def sign(n):
+	if n < 0:
+		return -1
+	elif n == 0:
+		return 0
+	elif n > 0:
+		return 1
+	else:
+		return ("What is this?")
+print(sign(5288)) #print 1
+print(sign(-100)) #print -1
+print(sign(0)) #print 0
+def tosmash(totalcandies):
+	print("Splitting",totalcandies,"candies.  Number of candies remained")
+	return totalcandies % 3
+print(tosmash(91)) #print Splitting 91 candies.  Number of candies remained\n 1
+def tosmash2(totalcandies):
+	if totalcandies == 1:
+		return "Splitting 1 candy."
+	elif totalcandies % 3 == 1:
+		print("Splitting",totalcandies,"candies.  Number of candy remained")
+		return totalcandies % 3
+	else:
+		print("Splitting",totalcandies,"candies.  Number of candies remained")
+		return totalcandies % 3
+print(tosmash2(91)) #print Splitting 91 candies.  Number of candies remained\n 1
+print(tosmash2(101)) #print Splitting 91 candies.  Number of candies remained\n 2
+print(tosmash2(1)) #print Splitting 1 candy.
+
+#7. Lists
+planets = ["Mercury", "Venus", "Earth", "Mars", "Jupiter", "Saturn", "Uranus", "Neptune"]
+hands = [
+    ["J", "Q", "K"],
+    ["2", "2", "2"],
+    ["6", "A", "K"], # (Comma after the last element is optional)
+]
+#I could also have written this on one line, but it can get hard to read
+hands = [["J", "Q", "K"], ["2", "2", "2"], ["6", "A", "K"]]
+print(planets[0]) #print Mercury
+print(planets[1]) #print Venus
+print(planets[-1]) #print Neptune
+print(planets[-2]) #print Uranus
+print(planets[0:3]) #print ['Mercury', 'Venus', 'Earth']
+print(planets[:3]) #print ['Mercury', 'Venus', 'Earth']
+print(planets[3:]) #print ['Mars', 'Jupiter', 'Saturn', 'Uranus', 'Neptune']
+print(planets[1:len(planets)-1]) #print ['Venus', 'Earth', 'Mars', 'Jupiter', 'Saturn', 'Uranus']
+print(planets[1:-1]) #print ['Venus', 'Earth', 'Mars', 'Jupiter', 'Saturn', 'Uranus']
+print(planets[-4:]) #print ['Jupiter', 'Saturn', 'Uranus', 'Neptune']
+planets[3] = "Malacandra"
+print(planets) #print ['Mercury', 'Venus', 'Earth', 'Malacandra', 'Jupiter', 'Saturn', 'Uranus', 'Neptune']
+planets[0:3] = ["Mer","Ven","Ear"]
+print(planets) #print ['Mer', 'Ven', 'Ear', 'Malacandra', 'Jupiter', 'Saturn', 'Uranus', 'Neptune']
+planets = ["Mercury", "Venus", "Earth", "Mars", "Jupiter", "Saturn", "Uranus", "Neptune"]
+print(planets[0:5]) #print ['Mercury', 'Venus', 'Earth', 'Mars', 'Jupiter']
+print(sorted(planets)) #print ['Earth', 'Jupiter', 'Mars', 'Mercury', 'Neptune', 'Saturn', 'Uranus', 'Venus']
+planets.append("Pluto")
+print(planets) #print ['Mercury', 'Venus', 'Earth', 'Mars', 'Jupiter', 'Saturn', 'Uranus', 'Neptune', 'Pluto']
+planets.pop()
+print(planets) #print ['Mercury', 'Venus', 'Earth', 'Mars', 'Jupiter', 'Saturn', 'Uranus', 'Neptune']
+#planets[len(planets)] = "Pluto" #RM:  can't add item to a list using listname[next avaiallbe index number]=item
+print(planets.index("Earth")) #print 2
+print("Earth" in planets) #print True
+print("Pluto" in planets) #print False
+#print(help(planets)) #print tell us about all the list methods
+primes = [2, 3, 5, 7]
+print(sum(primes)) #print 17
+print(max(primes)) #print 7
+print(min(primes)) #print 2
+#tuples use parantheses and cannot be modified or are immutable
+numbertuple = (1, 2, 3)
+print(numbertuple) #print (1, 2, 3)
+#Tuples are often used for functions that have multiple return values.
+x = 0.5
+print(x.as_integer_ratio()) #print (1, 2)
+x = 0.125
+print(x.as_integer_ratio()) #print (1, 8)
+numerator, denominator = x.as_integer_ratio()
+print(numerator) #print 1
+print(denominator) #print 8
+print(numerator/denominator) #print 0.125
+#swapping two variables
+a = 1
+b = 0
+a, b = b, a
+print(a) #print 0
+print(b) #print 1
+#start 8. Exercise: Lists
