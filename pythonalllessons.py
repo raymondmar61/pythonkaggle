@@ -258,4 +258,64 @@ b = 0
 a, b = b, a
 print(a) #print 0
 print(b) #print 1
-#start 8. Exercise: Lists
+
+#8. Exercise: Lists
+def seconditem(inputlist):
+	if len(inputlist) == 1:
+		return None
+	else:
+		return inputlist[1]
+desktoplist = ["Dell","HP","Apple","Alienware"]
+print(seconditem(desktoplist)) #print HP
+oneitem = ["good"]
+print(seconditem(oneitem)) #print None
+#Members of each team are stored in a list. The Coach is the first name in the list, the captain is the second name in the list, and other players are listed after that. These lists are stored in another list, which starts with the best team and proceeds through the list to the worst team last.  Select the **captain** of the worst team.
+def captainworseteam(teamslist):
+	#get number of teams len(teamslist)
+	numberofteams = len(teamslist)
+	#get captain worse team
+	return (teamslist[numberofteams-1][1])	
+team1 = ["coach1","captain1","player11","player12","player13","player14","player15"]
+team2 = ["coach2","captain2","player22","player22","player23","player24","player25"]
+team3 = ["coach3","captain3","player33","player32","player33","player34","player35"]
+allteams = [team1, team2, team3]
+print(allteams) #print [['coach1', 'captain1', 'player11', 'player12', 'player13', 'player14', 'player15'], ['coach2', 'captain2', 'player22', 'player22', 'player23', 'player24', 'player25'], ['coach3', 'captain3', 'player33', 'player32', 'player33', 'player34', 'player35']]
+print(len(allteams)) #print 3
+print(captainworseteam(allteams)) #print captain3
+#The next iteration of Mario Kart will feature an extra-infuriating new item, the *Purple Shell*. When used, it warps the last place racer into first place and the first place racer into last place. Complete the function below to implement the Purple Shell's effect.
+def purpleshell(mariokartracerslist):
+	print("Start race:",", ".join(mariokartracerslist))
+	newfirstplace = mariokartracerslist[-1]
+	newlastplace = mariokartracerslist[0]
+	#a = 1 b = 0 a, b = b, a.
+	mariokartracerslist[0], mariokartracerslist[-1] = newfirstplace, newlastplace
+	#mariokartracerslist[0] = newfirstplace
+	#mariokartracerslist[-1] = newlastplace
+	print("End race:",", ".join(mariokartracerslist))	
+racers = ["Mario","Bowser","Luigi","Toad","Peach","Koopa Trooper","Donkey Kong"]
+purpleshell(racers) #return Start race: Mario, Bowser, Luigi, Toad, Peach, Koopa Trooper, Donkey Kong\n End race: Donkey Kong, Bowser, Luigi, Toad, Peach, Koopa Trooper, Mario
+#What are the lengths of the following lists?
+a = [1, 2, 3]
+b = [1, [2, 3]]
+c = []
+d = [1, 2, 3][1:]
+print(len(a)) #print 3
+print(len(b)) #print 2
+print(len(c)) #print 0
+print(len(d)) #print 2
+print(d) #print [2:3]
+#A guest is considered 'fashionably late' if they arrived after at least half of the party's guests. However, they must not be the very last guest (that's taking it too far). [May and] Mona and Gilbert are the only guests who were fashionably late.  Complete the function below which takes a list of party attendees as well as a person, and tells us whether that person is fashionably late.  RM:  May counts as fashionably late because 4/7=.57 or at least half.
+def fashionablylate(arrivals, name): #RM:  function inputs are arrivals and name
+	partycount = len(arrivals)
+	arrivalnumber = arrivals.index(name)+1
+	if arrivalnumber/partycount == 1.0:
+		print(name+" is the last to arrive.")
+	elif arrivalnumber/partycount >.50:
+		print("{} is fashionably late.".format(name))
+	else:
+		print("{} is on time.".format(name))
+partyattendees = ['Adela', 'Fleda', 'Owen', 'May', 'Mona', 'Gilbert', 'Ford']
+for eachpartyattendees in partyattendees:
+	fashionablylate(partyattendees, eachpartyattendees) #return Adela is on time.\n Fleda is on time.\n Owen is on time.\n May is fashionably late.\n Mona is fashionably late.\n Gilbert is fashionably late.\n Ford is the last to arrive.
+
+#start 9. Loops And List Comprehensions
