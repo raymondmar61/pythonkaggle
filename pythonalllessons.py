@@ -318,4 +318,69 @@ partyattendees = ['Adela', 'Fleda', 'Owen', 'May', 'Mona', 'Gilbert', 'Ford']
 for eachpartyattendees in partyattendees:
 	fashionablylate(partyattendees, eachpartyattendees) #return Adela is on time.\n Fleda is on time.\n Owen is on time.\n May is fashionably late.\n Mona is fashionably late.\n Gilbert is fashionably late.\n Ford is the last to arrive.
 
-#start 9. Loops And List Comprehensions
+#9. Loops And List Comprehensions
+planets = ["Mercury", "Venus", "Earth", "Mars", "Jupiter", "Saturn", "Uranus", "Neptune"]
+for eachplanets in planets:
+	print(eachplanets, end=" ") #print Mercury Venus Earth Mars Jupiter Saturn Uranus Neptune
+multiplicands = (2, 2, 2, 3, 3, 5)
+product = 1
+for eachmultiplicands in multiplicands:
+	product = product * eachmultiplicands
+print(product) #print 360
+loopstring = "The quick brown fox"
+for eachloopstring in loopstring:
+	print(eachloopstring, end=",") #print T,h,e, ,q,u,i,c,k, ,b,r,o,w,n, ,f,o,x,
+s = "steganograpHy is the practicE of conceaLing a file, message, image, or video within another fiLe, message, image, Or video."
+for eachs in s:
+	if eachs.isupper():
+		print(eachs) #print H\n E\n L\n L\n O
+print(range(0,5)) #print range(0, 5)
+rangezerofive = range(0,5)
+print(rangezerofive) #print range(0, 5)
+print(list(range(0,5))) #print [0, 1, 2, 3, 4]  RM:  brain freeze.  print(range(0,5)) #print range(0, 5) obviously is incorrect.
+realrangezerofive = [x for x in range(0,5)]
+print(realrangezerofive) #print [0, 1, 2, 3, 4]
+#enumerate works by supplying a corresponding index to each element in the list that you pass it. Each time you go through the loop, index will be one greater, and item will be the next item in the sequence. It's very similar to using a normal for loop with a list, except this gives us an easy way to count how many items we've seen so far.
+#We don't want the user to see things listed from index 0, since this looks unnatural. Instead, the items should appear to start at index 1. Modify the print statement to reflect this behavior by adding "+ 1.
+#Finding the index of an item in a list
+singledigits = list(range(0,10))
+print(singledigits) #print [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+#for loop double each odd number in singledigits list
+for i, eachsingledigits in enumerate(singledigits):
+	if eachsingledigits % 2 == 1:
+		singledigits[i] = eachsingledigits * 2
+print(singledigits) #print [0, 2, 2, 6, 4, 10, 6, 14, 8, 18]
+seeindexnumbersinlist = ["UNO","DOS","Dixit","X-Men","Chess"]
+print(list(enumerate(seeindexnumbersinlist))) #print [(0, 'UNO'), (1, 'DOS'), (2, 'Dixit'), (3, 'X-Men'), (4, 'Chess')]
+for i, eachseeindexnumbersinlist in enumerate(seeindexnumbersinlist):
+	if i == 2:
+		print(eachseeindexnumbersinlist) #print Dixit
+x = 0.125
+numerator, denominator = x.as_integer_ratio()
+print(numerator) #print 1
+print(denominator) #print 8
+romannumbers = [('one', 1, 'I'),('two', 2, 'II'), ('three', 3, 'III'), ('four', 4, 'IV')]
+for word, numbers, roman in romannumbers:
+	print(word, numbers, roman, sep="=", end="; ") #print one=1=I; two=2=II; three=3=III; four=4=IV;
+i = 0
+while i < 10:
+	print(i, end=" ") #print 0 1 2 3 4 5 6 7 8 9
+	i += 1
+#list comprehension
+squares = [n**2 for n in range(0,10)]
+print(squares) #print [0, 1, 4, 9, 16, 25, 36, 49, 64, 81]
+planets = ["Mercury", "Venus", "Earth", "Mars", "Jupiter", "Saturn", "Uranus", "Neptune"]
+shortplanets = [eachplanets for eachplanets in planets if len(eachplanets) < 6]
+print(shortplanets) #print ['Venus', 'Earth', 'Mars']
+from statistics import mean
+numbers = [1,5,9,8,6,5,1,5,9,2,4,8]
+belowaveragenumbers = [eachnumbers for eachnumbers in numbers if eachnumbers < mean(numbers)]
+print(belowaveragenumbers) #print [1, 5, 5, 1, 5, 2, 4]
+from random import randint
+counter = randint(10,20)
+numberslist = [randint(-10,10) for n in range(0,counter)]
+print(numberslist) #print [-1, 4, -1, 5, 3, 2, -10, 6, 9, 8, 3, -2, 9, 0, 3, 9, -3, -10]
+positivenumberslist = [eachnumberslist for eachnumberslist in numberslist if eachnumberslist >=0]
+print(positivenumberslist) #print [4, 5, 3, 2, 6, 9, 8, 3, 9, 0, 3, 9]
+
+#start 10. Exercise: Loops And List Comprehensions
