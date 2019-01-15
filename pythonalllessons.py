@@ -383,4 +383,106 @@ print(numberslist) #print [-1, 4, -1, 5, 3, 2, -10, 6, 9, 8, 3, -2, 9, 0, 3, 9, 
 positivenumberslist = [eachnumberslist for eachnumberslist in numberslist if eachnumberslist >=0]
 print(positivenumberslist) #print [4, 5, 3, 2, 6, 9, 8, 3, 9, 0, 3, 9]
 
-#start 10. Exercise: Loops And List Comprehensions
+#10. Exercise: Loops And List Comprehensions
+#Try to identify the bug and fix it in the cell below
+def has_lucky_number(nums):
+    """Return whether the given list of numbers is lucky. A lucky list contains
+    at least one number divisible by 7.
+    """
+    print(nums)
+    for num in nums:
+        if num % 7 == 0:
+            return True
+        else:
+            return False
+print(has_lucky_number([7,11,14,170])) #print True  RM:  The answer is the return True and return False stops the for loop after the first item in list nums; in particular, if the first item in has_lucky_number is not divisible by seven and another item is divisible by seven, then for loop stops at first item return False.  The return causes a function to exit immediately.
+#print([1, 2, 3, 4] > 2) #print TypeError: '>' not supported between instances of 'list' and 'int'
+def elementwise_greater_than(L, thresh):
+    """Return a list with the same length as L, where the value at index i is True if L[i] is greater than thresh, and False otherwise.    
+    >>> elementwise_greater_than([1, 2, 3, 4], 2)
+    [False, False, True, True]
+    """
+    answer = []
+    for eachL in L:
+    	if eachL > thresh:
+    		answer.append(True)
+    	else:
+    		answer.append(False)
+    print(answer)
+elementwise_greater_than([1, 2, 3, 4],2) #return [False, False, True, True]
+from collections import Counter
+def menu_is_boring(meals):
+    """Given a list of meals served over some period of time, return True if the same meal has ever been served two days in a row, and False otherwise.  RM:  return a list of meals served two or more times."""
+    duplicatemeal = []    
+    counterdictionary = Counter(meals)
+    for item, value in counterdictionary.items():
+    	if value >= 2:
+    		duplicatemeal.append(item)
+    print(duplicatemeal)
+menu_is_boring(["walffles","bacon","pancakes","steak","French Fries","hamburger","broccoli","sausage","sushi","pancakes","steak","green beans","chow mein","chow mein","apples","pancakes"]) #return ['pancakes', 'steak', 'chow mein']
+menu_is_boring(["apples","orange","chicken fried steak","tacos","pizza"]) #return []
+
+#11. Strings and Dictionaries
+print("A reminder of an escape character use backslash \\ \' \".")
+triplequotes = """Hello
+World"""
+print(triplequotes) #print Hello\n World
+print("""Triple Quotes 
+Okie dokey '" """) #print Triple Quotes\n Okie dokey '"
+print("Word Number Roman", sep="=", end="; ") #print Word Number Roman;
+planet = "Pluto"
+print(planet[-3:]) #print uto
+print(planet[2:]) #print uto
+print(planet[:-3]) #print Pl
+print(planet[0:2]) #print Pl
+print(planet[::-1]) #print otulP
+print([eachplanet+"!" for eachplanet in planet]) #print ['P!', 'l!', 'u!', 't!', 'o!']
+#Strings are immutable.  We can't modify them.
+#planet[0] = "B"  #returns error message 'str' object does not support item assignment
+claimplanet = "Pluto is a planet!"
+print(claimplanet.upper()) #print PLUTO IS A PLANET!
+print(claimplanet.lower()) #print pluto is a planet!
+print(claimplanet.index("plan")) #print 11 #RM:  plan starts at index position 11
+print(claimplanet.startswith(planet)) #print True
+print(claimplanet.startswith("Pluto")) #print True
+print(claimplanet.startswith("Zebra")) #print False
+print(claimplanet.endswith("planet!")) #print True
+splitclaimplanet = claimplanet.split()
+print(splitclaimplanet) #print ['Pluto', 'is', 'a', 'planet!']
+datestr = '1956-01-31'
+year, month, day = datestr.split('-')
+print(year) #print 1953
+print(month) #print 01
+print(day) #print 03
+print(" ".join(splitclaimplanet)) #print Pluto is a planet!
+position = 9
+print(planet+" you'll always be the " +str(position)+"th planet to me.") #print Pluto you'll always be the 9th planet to me.
+print("{} you'll always be the {}th planet to me.".format(planet,position)) #print Pluto you'll always be the 9th planet to me.  Notice how we didn't even have to call str() to convert position 9 from an int. format() takes care of that for us.
+plutomass = 1.303 * (10**22)
+earthmass = 5.9722 * (10**24)
+population = 52910390
+print("{:.2} two decimal places.  {:.3} three decimal places, {:.3%} three decimal places as percent.  {:,} separate with commas".format(plutomass, earthmass, plutomass/earthmass, population)) #print 1.3e+22 two decimal places.  5.97e+24 three decimal places, 0.218% three decimal places as percent.  52,910,390 separate with commas
+print("Pluto is a {0}  No it's a {1}.  {0}.  {1}".format("planet","dwarf planet")) #print Pluto is a planet  No it's a dwarf planet.  planet.  dwarf planet
+
+numbersdictionary = {'one':1, 'two':2, 'three':3}
+print(numbersdictionary["one"]) #print 1
+numbersdictionary["eleven"] = 11
+print(numbersdictionary) #print {'one': 1, 'two': 2, 'three': 3, 'eleven': 11}
+numbersdictionary["one"] = "Pluto"
+print(numbersdictionary) #print {'one': 'Pluto', 'two': 2, 'three': 3, 'eleven': 11}
+planets = ['Mercury', 'Venus', 'Earth', 'Mars', 'Jupiter', 'Saturn', 'Uranus', 'Neptune']
+planetsdictionary = {}
+planetsdictionary.update({"Mercury":"M"})
+planetsdictionary["Venus"] = "V" 
+print(planetsdictionary) #print {'Mercury': 'M', 'Venus': 'V'}
+#dictionary comprehension
+planetdictionarycomprehension = {eachplanet:eachplanet[0] for eachplanet in planets}
+print(planetdictionarycomprehension) #print {'Mercury': 'M', 'Venus': 'V', 'Earth': 'E', 'Mars': 'M', 'Jupiter': 'J', 'Saturn': 'S', 'Uranus': 'U', 'Neptune': 'N'}
+numbersdictionary = {'one':1, 'two':2, 'three':3}
+for key in numbersdictionary:
+	print("{} = {}".format(key,numbersdictionary[key])) #print one = 1\n two = 2\n three = 3
+print(" ".join(planetdictionarycomprehension.values())) #print M V E M J S U N
+for planet, initial in planetdictionarycomprehension.items(): #planet is key, initial is value in for key, value in planetdictionarycomprehension.itmes():
+	print("{} begins with {}".format(planet, initial)) #print Mercury begins with M\n Venus begins with V . . . Neptune begins with N
+
+#start 12. Exercise: Strings and Dictionaries
