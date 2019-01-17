@@ -485,4 +485,56 @@ print(" ".join(planetdictionarycomprehension.values())) #print M V E M J S U N
 for planet, initial in planetdictionarycomprehension.items(): #planet is key, initial is value in for key, value in planetdictionarycomprehension.itmes():
 	print("{} begins with {}".format(planet, initial)) #print Mercury begins with M\n Venus begins with V . . . Neptune begins with N
 
-#start 12. Exercise: Strings and Dictionaries
+#12. Exercise: Strings and Dictionaries
+a = ""
+print(len(a)) #print 0
+a = "\n"
+print(len(a)) #print 1 The newline character is just a single character! (Even though we represent it to Python using a combination of two characters.)
+#Given a string, it should return whether or not that string represents a valid zip code. For our purposes, a valid zip code is any string consisting of exactly 5 digits.
+def isvalidzip(zipcode):	
+	if len(zipcode) != 5:
+		print("Not a valid zip code")
+	elif zipcode.isdigit() is True:	
+		print("Valid zip code")		
+	else:
+		print("Not a valid zip code")
+isvalidzip("12345") #print Valid zip code
+isvalidzip("abcdo") #print Not a valid zip code
+isvalidzip("12io0") #print Not a valid zip code
+isvalidzip("12io0pop") #print Not a valid zip code
+isvalidzip("946") #print Not a valid zip code
+#A researcher has gathered thousands of news articles. Wants articles including a specific word.  Do not include documents where the keyword string shows up only as a part of a larger word. For example, if she were looking for the keyword "closed", you would not include the string "enclosed."  She does not want you to distinguish upper case from lower case letters. So the phrase "Closed the case." would be included when the keyword is "closed".  Do not let periods or commas affect what is matched. “It is closed.” would be included when the keyword is "closed". But you can assume there are no other types of punctuation.
+def wordsearch(document, keyword):
+	document = document.lower()
+	document = document.replace(".","") #RM:  split includes punctuation marks next to a string
+	document = document.replace(",","") #RM:  split includes punctuation marks next to a string
+	for eachdocument in document.split():
+		if keyword == eachdocument:
+			print("{} is found using split()".format(keyword))
+			break
+wordsearch("The Learn Python Challenge Casino.","casino") #print casino is found using split()
+wordsearch("They bought a car","casino") #print
+wordsearch("Casinoville","casino") #print
+#RM:  Can't use .find() because .find() returns index number 0 in Casinoville
+#The researcher wants to supply multiple keywords to search for.
+def multiplewordsearch(document, keywords):
+	document = document.lower()
+	document = document.replace(".","")
+	document = document.replace(",","")
+	if any(eachkeywords in document.split() for eachkeywords in keywords):
+		print(keywords,"is in")
+	for eachdocument in document.split():
+		for eachkeywords in keywords:
+			if eachkeywords == eachdocument:
+				print("{} is found using split()".format(eachkeywords))
+keywords = ["casino", "they"]
+multiplewordsearch("The Learn Python Challenge Casino.",keywords) #print ['casino', 'they'] is in\n casino is found using split()
+multiplewordsearch("They bought a car",keywords) #print ['casino', 'they'] is in\n they is found using split()
+multiplewordsearch("Casinoville",keywords) #print
+#official solution using function wordsearch
+def multi_word_search(documents, keywords):
+    keyword_to_indices = {}
+    for keyword in keywords:
+        keyword_to_indices[keyword] = wordsearch(documents, keyword)
+    return keyword_to_indices
+#start 13. Working with External Libraries
