@@ -78,3 +78,47 @@ DecisionTreeRegressor(criterion='mse', max_depth=None, max_features=None,
 from sklearn.metrics import mean_absolute_error
 validatepredictions = melbournemodel.predict(validateX)
 print(mean_absolute_error(validatey, validatepredictions)) #print 274081.70109748223
+
+#8.  Underfitting and Overfitting
+#The max_leaf_nodes argument provides a very sensible way to control overfitting vs underfitting. The more leaves we allow the model to make, the more we move from the underfitting area in the above graph to the overfitting area.  We can use a utility function to help compare MAE scores from different values for max_leaf_nodes.
+from sklearn.metrics import mean_absolute_error
+from sklearn.tree import DecisionTreeRegressor
+def get_mae(max_leaf_nodes, trainX, validateX, trainy, validatey):
+    model = DecisionTreeRegressor(max_leaf_nodes=max_leaf_nodes, random_state=0)
+    model.fit(trainX, trainy)
+    preds_val = model.predict(validateX)
+    mae = mean_absolute_error(validatey, preds_val)
+    return(mae)
+#compare MAE Mean Average Error with differing values of max_leaf_nodes
+for max_leaf_nodes in [5, 50, 500, 5000]:
+    my_mae = get_mae(max_leaf_nodes, trainX, validateX, trainy, validatey)
+    print("Max leaf nodes: %d  \t\t Mean Absolute Error:  %d" %(max_leaf_nodes, my_mae))
+"""
+Max leaf nodes: 5  		 Mean Absolute Error:  385696
+Max leaf nodes: 50  		 Mean Absolute Error:  279794
+Max leaf nodes: 500  		 Mean Absolute Error:  261718
+Max leaf nodes: 5000  		 Mean Absolute Error:  271996
+"""
+#Of the options listed, 500 is the optimal number of leaves.
+best_tree_size = 500
+from sklearn.tree import DecisionTreeRegressor
+finalmodel = DecisionTreeRegressor(max_leaf_nodes=best_tree_size, random_state=1)
+print(finalmodel.fit(X,y))
+"""
+DecisionTreeRegressor(criterion='mse', max_depth=None, max_features=None,
+           max_leaf_nodes=500, min_impurity_decrease=0.0,
+           min_impurity_split=None, min_samples_leaf=1,
+           min_samples_split=2, min_weight_fraction_leaf=0.0,
+           presort=False, random_state=1, splitter='best')
+"""
+
+#10. Random Forests
+#The random forest uses many trees, and it makes a prediction by averaging the predictions of each component tree.
+from sklearn.ensemble import RandomForestRegressor
+from sklearn.metrics import mean_absolute_error
+forest_model = RandomForestRegressor(random_state=1)
+forest_model.fit(trainX, trainy)
+melb_preds = forest_model.predict(validateX)
+print(mean_absolute_error(validatey, melb_preds)) #print 218482.25517538196
+
+

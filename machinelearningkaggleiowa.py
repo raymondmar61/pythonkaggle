@@ -107,3 +107,50 @@ print(y.head().tolist()) #print [208500, 181500, 223500, 140000, 250000]
 from sklearn.metrics import mean_absolute_error
 validatepredictions = iowamodel.predict(validateX)
 print(mean_absolute_error(validatey, validatepredictions)) #print 29652.931506849316
+
+#9.  Exercise:  Underfitting and Overfitting
+def get_mae(max_leaf_nodes, trainX, validateX, trainy, validatey):
+    model = DecisionTreeRegressor(max_leaf_nodes=max_leaf_nodes, random_state=0)
+    model.fit(trainX, trainy)
+    preds_val = model.predict(validateX)
+    mae = mean_absolute_error(validatey, preds_val)
+    return(mae)
+#Write a loop that tries the following values for *max_leaf_nodes* from a set of possible values.
+candidate_max_leaf_nodes = [5, 25, 50, 100, 250, 500]
+for max_leaf_nodes in candidate_max_leaf_nodes:
+    my_mae = get_mae(max_leaf_nodes, trainX, validateX, trainy, validatey)
+    print("Max leaf nodes: %d  \t\t Mean Absolute Error:  %d" %(max_leaf_nodes, my_mae))
+"""
+Max leaf nodes: 5      Mean Absolute Error:  35044
+Max leaf nodes: 25       Mean Absolute Error:  29016
+Max leaf nodes: 50       Mean Absolute Error:  27405
+Max leaf nodes: 100      Mean Absolute Error:  27282
+Max leaf nodes: 250      Mean Absolute Error:  27893
+Max leaf nodes: 500      Mean Absolute Error:  29454
+"""
+#Of the options listed, 100 is the optimal number of leaves.
+best_tree_size = 100
+from sklearn.tree import DecisionTreeRegressor
+finalmodel = DecisionTreeRegressor(max_leaf_nodes=best_tree_size, random_state=1)
+print(finalmodel.fit(X,y))
+"""
+DecisionTreeRegressor(criterion='mse', max_depth=None, max_features=None,
+           max_leaf_nodes=100, min_impurity_decrease=0.0,
+           min_impurity_split=None, min_samples_leaf=1,
+           min_samples_split=2, min_weight_fraction_leaf=0.0,
+           presort=False, random_state=1, splitter='best')
+"""
+
+#11. Exercise:  Random Forests
+from sklearn.ensemble import RandomForestRegressor
+# Define the model. Set random_state to 1
+rf_model = RandomForestRegressor(random_state=1)
+# fit your model
+rf_model.fit(trainX, trainy)
+# Calculate the mean absolute error of your Random Forest model on the validation data
+rf_val_predictions = rf_model.predict(validateX)
+rf_val_mae = mean_absolute_error(rf_val_predictions, validatey)
+print("Validation MAE for Random Forest Model: {}".format(rf_val_mae)) #print Validation MAE for Random Forest Model: 22762.42931506849
+#or Calculate the mean absolute error of your Random Forest model on the validation data
+rf_val_predictions = rf_model.predict(validateX)
+print(mean_absolute_error(validatey, rf_val_predictions)) #print 22762.42931506849
