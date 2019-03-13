@@ -425,3 +425,172 @@ df = reviews.loc[0:99, ["country","variety"]]
 italian_wines = reviews.loc[reviews.country=="Italy"]
 #select wines from Australia or New Zeland with 95 points or greater
 top_oceania_wines = reviews.loc[((reviews.country == 'Australia') & (reviews.points >= 95)) | ((reviews.country == 'New Zealand') & (reviews.points >= 95))]
+
+#3.  Summary Functions and Maps
+import pandas as pd
+pd.set_option('max_rows', 5)
+import numpy as np
+reviews = pd.read_csv("winemag-data-130k-v2.csv", index_col=0)
+print(reviews.head())  #print first 5 rows starting index 0
+'''
+    country         ...                        winery
+0     Italy         ...                       Nicosia
+1  Portugal         ...           Quinta dos Avidagos
+2        US         ...                     Rainstorm
+3        US         ...                    St. Julian
+4        US         ...                  Sweet Cheeks
+
+[5 rows x 13 columns]
+'''
+#One of the most important summarization functions is the describe method.   The describe method used for points column.
+print(reviews.points.describe())
+'''
+count    129971.000000
+mean         88.447138
+             ...      
+75%          91.000000
+max         100.000000
+Name: points, Length: 8, dtype: float64
+'''
+#Using describe method for string data.  The describe method used for taster_name column.
+print(reviews.taster_name.describe())
+'''
+count         103727
+unique            19
+top       Roger Voss
+freq           25514
+Name: taster_name, dtype: object
+'''
+#There are functions that return more specific information. For example, you can see the points allotted using the mean function.
+print(reviews.points.mean()) #print 88.44713820775404
+#To see a list of unique values we can use the unique function.  For example, you can see the tasters using the unique function.
+print(reviews.taster_name.unique()) #print ['Kerin O’Keefe' 'Roger Voss' 'Paul Gregutt' 'Alexander Peartree' 'Michael Schachner' 'Anna Lee C. Iijima' 'Virginie Boone' 'Matt Kettmann' nan 'Sean P. Sullivan' 'Jim Gordon' 'Joe Czerwinski' 'Anne Krebiehl\xa0MW' 'Lauren Buzzeo' 'Mike DeSimone' 'Jeff Jenssen' 'Susan Kostrzewa' 'Carrie Dykes' 'Fiona Adams' 'Christina Pickard']
+print(list(reviews.taster_name.unique())) #print ['Kerin O’Keefe', 'Roger Voss', 'Paul Gregutt', 'Alexander Peartree', 'Michael Schachner', 'Anna Lee C. Iijima', 'Virginie Boone', 'Matt Kettmann', nan, 'Sean P. Sullivan', 'Jim Gordon', 'Joe Czerwinski', 'Anne Krebiehl\xa0MW', 'Lauren Buzzeo', 'Mike DeSimone', 'Jeff Jenssen', 'Susan Kostrzewa', 'Carrie Dykes', 'Fiona Adams', 'Christina Pickard']
+#To see a list of unique values and how often they occur in the dataset, we can use the value_counts method.
+print(reviews.taster_name.value_counts())
+'''
+Roger Voss           25514
+Michael Schachner    15134
+                     ...  
+Fiona Adams             27
+Christina Pickard        6
+Name: taster_name, Length: 19, dtype: int64
+'''
+
+#A "map" is a term for a function that takes one set of values and "maps" them to another set of values. In data science we often have a need for creating new representations from existing data, or for transforming data from the format it is in now to the format that we want it to be in later.
+#There are two mapping method that you will use often. Series.map is the first, and slightly simpler one. For example, suppose that we wanted to remean the scores the wines recieved to 0.  #RM:  I don't see the remean the scores the wines received to 0.  I believe the Series.map is reviews from reviews = pd.read_csv("winemag-data-130k-v2.csv", index_col=0) and points is the column name to remean the scores the wines received to 0.
+review_points_mean = reviews.points.mean()
+print(reviews.points.map(lambda p: p - review_points_mean))
+'''
+0        -1.447138
+1        -1.447138
+            ...   
+129969    1.552862
+129970    1.552862
+Name: points, Length: 129971, dtype: float64
+'''
+#The function you pass to map should expect a single value from the Series (a point value, in the above example), and return a transformed version of that value. map returns a new Series where all the values have been transformed by your function.
+#DataFrame.apply is the equivalent method if we want to transform a whole DataFrame by calling a custom method on each row.  #RM:  I think the method DataFrame.apply below remean the scores the wines received to 0.  The DataFrame is the reviews from reviews = pd.read_csv("winemag-data-130k-v2.csv", index_col=0).
+def remean_points(row):
+    row.points = row.points - review_points_mean
+    return row
+print(reviews.apply(remean_points, axis='columns'))
+'''
+Name: points, Length: 129971, dtype: float64
+         country          ...                         winery
+0          Italy          ...                        Nicosia
+1       Portugal          ...            Quinta dos Avidagos
+...          ...          ...                            ...
+129969    France          ...           Domaine Marcel Deiss
+129970    France          ...               Domaine Schoffit
+
+[129971 rows x 13 columns]
+'''
+#Note that Series.map and DataFrame.apply return new, transformed Series and DataFrames, respectively. They don't modify the original data they're called on.  Please note #RM:  It's the two python code above.
+#Pandas provides many common mapping operations as built-ins. For example, here's a faster way of remeaning our points column.  We are performing an operation between a lot of values on the left-hand side (everything in the Series) and a single value on the right-hand side (the mean value). pandas looks at this expression and figures out that we must mean to subtract that mean value from every value in the dataset.
+review_points_mean = reviews.points.mean()
+print(reviews.points - review_points_mean)
+'''
+0        -1.447138
+1        -1.447138
+            ...   
+129969    1.552862
+129970    1.552862
+Name: points, Length: 129971, dtype: float64
+'''
+#pandas will also understand what to do if we perform these operations between Series of equal length. For example, an easy way of combining country and region information in the dataset would be to do the following.
+print(reviews.country + " - " + reviews.region_1)
+'''
+0            Italy - Etna
+1                     NaN
+               ...       
+129969    France - Alsace
+129970    France - Alsace
+Length: 129971, dtype: object
+'''
+
+#3.  Summary Functions and Maps Exercises
+import pandas as pd
+pd.set_option("display.max_rows", 5)
+reviews = pd.read_csv("winemag-data-130k-v2.csv", index_col=0)
+#What is the median of the "points" column in the "reviews" DataFrame?
+print(reviews.points.median()) #print 88.0
+#What countries are represented in the dataset? (Your answer should not include any duplicates.)
+print(reviews.country.unique()) #print ['Italy' 'Portugal' 'US' 'Spain' 'France' 'Germany' 'Argentina' 'Chile' 'Australia' 'Austria' 'South Africa' 'New Zealand' 'Israel' 'Hungary' 'Greece' 'Romania' 'Mexico' 'Canada' nan 'Turkey' 'Czech Republic' 'Slovenia' 'Luxembourg' 'Croatia' 'Georgia' 'Uruguay' 'England' 'Lebanon' 'Serbia' 'Brazil' 'Moldova' 'Morocco' 'Peru' 'India' 'Bulgaria' 'Cyprus' 'Armenia' 'Switzerland' 'Bosnia and Herzegovina' 'Ukraine' 'Slovakia' 'Macedonia' 'China' 'Egypt']
+#How often does each country appear in the dataset? Create a Series "reviews_per_country" mapping countries to the count of reviews of wines from that country.
+print(reviews.country.value_counts())
+'''
+US          54504
+France      22093
+            ...  
+Slovakia        1
+Egypt           1
+Name: country, Length: 43, dtype: int64
+'''
+#Create variable "centered_price" containing a version of the "price" column with the mean price subtracted.  (Note: this 'centering' transformation is a common preprocessing step before applying various machine learning algorithms.) 
+print(reviews.price - reviews.price.mean())
+'''
+0               NaN
+1        -20.363389
+            ...    
+129969    -3.363389
+129970   -14.363389
+Name: price, Length: 129971, dtype: float64
+'''
+#I'm an economical wine buyer. Which wine is the "best bargain"? Create a variable "bargain_wine" with the title of the wine with the highest points-to-price ratio in the dataset.
+bargain_idx = (reviews.points / reviews.price).idxmax()
+bargain_wine = reviews.loc[bargain_idx, 'title']
+print(bargain_wine) #print Bandit NV Merlot (California)
+#There are only so many words you can use when describing a bottle of wine. Is a wine more likely to be "tropical" or "fruity"? Create a Series "descriptor_counts" counting how many times each of these two words appears in the "description" column in the dataset.
+n_trop = reviews.description.map(lambda desc: "tropical" in desc).sum()
+n_fruity = reviews.description.map(lambda desc: "fruity" in desc).sum()
+descriptor_counts = pd.Series([n_trop, n_fruity], index=['tropical', 'fruity'])
+print(descriptor_counts)
+'''
+tropical    3607
+fruity      9090
+dtype: int64
+'''
+#We'd like to host these wine reviews on our website, but a rating system ranging from 80 to 100 points is too hard to understand - we'd like to translate them into simple star ratings. A score of 95 or higher counts as 3 stars, a score of at least 85 but less than 95 is 2 stars. Any other score is 1 star.
+#Also, the Canadian Vintners Association bought a lot of ads on the site, so any wines from Canada should automatically get 3 stars, regardless of points.
+#Create a series "star_ratings" with the number of stars corresponding to each review in the dataset.
+def stars(row):
+    if row.country == 'Canada':
+        return 3
+    elif row.points >= 95:
+        return 3
+    elif row.points >= 85:
+        return 2
+    else:
+        return 1
+star_ratings = reviews.apply(stars, axis='columns')
+print(star_ratings)
+'''
+0         2
+1         2
+         ..
+129969    2
+129970    2
+Length: 129971, dtype: int64
+'''
+#4.   Grouping and Sorting
