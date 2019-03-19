@@ -594,3 +594,164 @@ print(star_ratings)
 Length: 129971, dtype: int64
 '''
 #4.   Grouping and Sorting
+import pandas as pd
+reviews = pd.read_csv("winemag-data-130k-v2.csv", index_col=0)
+pd.set_option("display.max_rows", 5)
+#We can replicate what value_counts does using groupby by doing the following.  groupby created groups of reviews with the same point values. Then, for each group, it counted the size of the group.
+print(reviews.groupby("points").points.count())
+'''
+points
+80     397
+81     692
+      ... 
+99      33
+100     19
+Name: points, Length: 21, dtype: int64
+'''
+#count was the aggregation for each group.  There are others.  For example, to get the cheapest wine in each point value category, we can do the following:
+print(reviews.groupby("points").price.min())
+'''
+points
+80      5.0
+81      5.0
+       ... 
+99     44.0
+100    80.0
+Name: price, Length: 21, dtype: float64
+'''
+#You can think of each group we generate as being a slice of our DataFrame containing only data with values that match. This DataFrame is accessible to us directly using the apply method, and we can then manipulate the data in any way we see fit. For example, here's one way of selecting the name of the first wine reviewed from each winery in the dataset:
+print(reviews.groupby('winery').apply(lambda df: df.title.iloc[0]))
+'''
+winery
+1+1=3                          1+1=3 NV Rosé Sparkling (Cava)
+10 Knots                 10 Knots 2010 Viognier (Paso Robles)
+                                  ...                        
+àMaurice    àMaurice 2013 Fred Estate Syrah (Walla Walla V...
+Štoka                         Štoka 2009 Izbrani Teran (Kras)
+Length: 16757, dtype: object
+'''
+#For even more fine-grained control, you can also group by more than one column. For an example, here's how we would pick out the best wine by country and province:
+print(reviews.groupby(['country', 'province']).apply(lambda df: df.loc[df.points.argmax()]))
+'''
+temppython.py:38: FutureWarning: 'argmax' is deprecated, use 'idxmax' instead. The behavior of 'argmax'
+will be corrected to return the positional maximum in the future.
+Use 'series.values.argmax' to get the position of the maximum now.
+  print(reviews.groupby(['country', 'province']).apply(lambda df: df.loc[df.points.argmax()]))
+                              country          ...                         winery
+country   province                             ...                               
+Argentina Mendoza Province  Argentina          ...           Bodega Catena Zapata
+          Other             Argentina          ...                         Colomé
+...                               ...          ...                            ...
+Uruguay   San Jose            Uruguay          ...                 Castillo Viejo
+          Uruguay             Uruguay          ...                        Narbona
+
+[425 rows x 13 columns]
+'''
+#Another groupby method worth mentioning is agg, which lets you run a bunch of different functions on your DataFrame simultaneously. For example, we can generate a simple statistical summary of the dataset as follows:
+print(reviews.groupby(['country']).price.agg([len, min, max]))
+'''
+              len   min    max
+country                       
+Argentina  3800.0   4.0  230.0
+Armenia       2.0  14.0   15.0
+...           ...   ...    ...
+Ukraine      14.0   6.0   13.0
+Uruguay     109.0  10.0  130.0
+
+[43 rows x 3 columns]
+'''
+#groupby sometimes result in a "multi-index."  A multi-index has multiple levels. For example:
+countries_reviewed = reviews.groupby(['country', 'province']).description.agg([len])
+print(countries_reviewed)
+'''
+                             len
+country   province              
+Argentina Mendoza Province  3264
+          Other              536
+...                          ...
+Uruguay   San Jose             3
+          Uruguay             24
+
+[425 rows x 1 columns]
+'''
+#Multi-indices have several methods for dealing with their tiered structure which are absent for single-level indices. They also require two levels of labels to retrieve a value, an operation that looks something like this.
+#There are detailed instructions using MultiIndex in the pandas documentation https://pandas.pydata.org/pandas-docs/stable/advanced.html
+#The MultiIndex method you will use most often is the one for converting back to a regular index, the reset_index method:
+print(countries_reviewed.reset_index())
+'''
+       country          province   len
+0    Argentina  Mendoza Province  3264
+1    Argentina             Other   536
+..         ...               ...   ...
+423    Uruguay          San Jose     3
+424    Uruguay           Uruguay    24
+
+[425 rows x 3 columns]
+'''
+#Grouping returns data in index order, not in value order. That is to say, when outputting the result of a groupby, the order of the rows is dependent on the values in the index, not the data.  But you can sort the data with the sort_values method.
+countries_reviewed = countries_reviewed.reset_index()
+print(countries_reviewed.sort_values(by='len'))
+'''
+    country               province    len
+179  Greece  Muscat of Kefallonian      1
+192  Greece          Sterea Ellada      1
+..      ...                    ...    ...
+415      US             Washington   8639
+392      US             California  36247
+
+[425 rows x 3 columns]
+'''
+#sort_values defaults to an ascending sort, where the lowest values go first. Most of the time we want a descending sort however, where the higher numbers go first.
+print(countries_reviewed.sort_values(by='len', ascending=False))
+'''
+    country    province    len
+392      US  California  36247
+415      US  Washington   8639
+..      ...         ...    ...
+63    Chile     Coelemu      1
+149  Greece      Beotia      1
+
+[425 rows x 3 columns]
+'''
+#To sort by index values, use the companion method sort_index. This method has the same arguments and default order:
+print(countries_reviewed.sort_index())
+'''
+       country          province   len
+0    Argentina  Mendoza Province  3264
+1    Argentina             Other   536
+..         ...               ...   ...
+423    Uruguay          San Jose     3
+424    Uruguay           Uruguay    24
+
+[425 rows x 3 columns]
+'''
+#Finally, know that you can sort by more than one column at a time:
+print(countries_reviewed.sort_values(by=['country', 'len']))
+'''
+       country          province   len
+1    Argentina             Other   536
+0    Argentina  Mendoza Province  3264
+..         ...               ...   ...
+424    Uruguay           Uruguay    24
+419    Uruguay         Canelones    43
+
+[425 rows x 3 columns]
+'''
+
+#4.  Grouping and Sorting Exercises
+#Who are the most common wine reviewers in the dataset? Create a `Series` whose index is the `taster_twitter_handle` category from the dataset, and whose values count how many reviews each person wrote.
+reviews_written = reviews.groupby('taster_twitter_handle').taster_twitter_handle.count()
+#or
+reviews_written = reviews.groupby('taster_twitter_handle').size()
+#What is the best wine I can buy for a given amount of money? Create a `Series` whose index is wine prices and whose values is the maximum number of points a wine costing that much was given in a review. Sort the values by price, ascending (so that `4.0` dollars is at the top and `3300.0` dollars is at the bottom).
+best_rating_per_price = reviews.groupby('price')['points'].max().sort_index()
+#What are the minimum and maximum prices for each `variety` of wine? Create a `DataFrame` whose index is the `variety` category from the dataset and whose values are the `min` and `max` values thereof.
+price_extremes = reviews.groupby(['variety']).price.agg([min, max])
+#What are the most expensive wine varieties? Create a variable `sorted_varieties` containing a copy of the dataframe from the previous question where varieties are sorted in descending order based on minimum price, then on maximum price (to break ties).
+sorted_varieties = price_extremes.sort_values(by=['min', 'max'], ascending=False)
+#Create a `Series` whose index is reviewers and whose values is the average review score given out by that reviewer. Hint: you will need the `taster_name` and `points` columns.
+reviewer_mean_ratings = reviews.groupby("taster_name").points.mean()
+#What combination of countries and varieties are most common? Create a `Series` whose index is a `MultiIndex`of `{country, variety}` pairs. For example, a pinot noir produced in the US should map to `{"US", "Pinot Noir"}`. Sort the values in the `Series` in descending order based on wine count.
+country_variety_counts = reviews.groupby(['country', 'variety']).size().sort_values(ascending=False)
+
+#5 Data Types And Missing Data
